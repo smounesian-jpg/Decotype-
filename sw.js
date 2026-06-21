@@ -4,7 +4,7 @@
 
 const CACHE_NAME = 'vocab-app-v1';
 const ASSETS_TO_CACHE = [
-    './decotype.html',
+    './index.html',
     './manifest.json',
     './icon-192.png',
     './icon-512.png'
@@ -51,7 +51,7 @@ self.addEventListener('fetch', (event) => {
                 return networkResponse;
             }).catch(() => {
                 // اگر آفلاین بودیم و چیزی در کش هم نبود، صفحه اصلی را برگردان
-                return caches.match('./decotype.html');
+                return caches.match('./index.html');
             });
         })
     );
