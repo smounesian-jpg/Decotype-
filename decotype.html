@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آموزش لغات انگلیسی - نسخه حرفه‌ای</title>
+
+    <!-- تنظیمات وب‌اپلیکیشن (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="لغات انگلیسی">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tahoma', 'Segoe UI', sans-serif;
+        }
+
+        :root {
+            --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-secondary: white;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --card-bg: #f8fafc;
+        }
+
+        body.dark-mode {
+            --bg-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --bg-secondary: #1e1e2e;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --card-bg: #2d2d3d;
+        }
+
+        body {
+            background: var(--bg-primary);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+            transition: all 0.3s;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-option {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            text-align: right;
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-option:hover {
+            background: #e0e7ff;
+            border-color: #667eea;
+        }
+
+        .btn-option.correct {
+            background: #22c55e !important;
+            color: white !important;
+            border-color: #22c55e !important;
+        }
+
+        .btn-option.wrong {
+            background: #ef4444 !important;
+            color: white !important;
+            border-color: #ef4444 !important;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 200px;
+            font-family: 'Tahoma', sans-serif;
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--border-color);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
+        }
+
+        .question-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .feedback.wrong {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .example-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        /* مدال‌ها و نشان‌ها */
+        .medals-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .medal {
+            text-align: center;
+            padding: 10px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            opacity: 0.3;
+            transition: all 0.3s;
+        }
+
+        .medal.unlocked {
+            opacity: 1;
+            animation: pulse 0.5s;
+        }
+
+        .medal-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .medal-name {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* سیستم امتیاز */
+        .points-display {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 15px 0;
+            color: white;
+            font-weight: bold;
+        }
+
+        .points-value {
+            font-size: 2rem;
+        }
+
+        /* دکمه تلفظ */
+        .pronunciation-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 10px auto;
+            display: block;
+        }
+
+        .pronunciation-btn:hover {
+            background: #5568d3;
+            transform: scale(1.1);
+        }
+
+        /* تنظیمات */
+        .setting-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 12px;
+        }
+
+        .setting-item label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            font-weight: bold;
+        }
+
+        .setting-item input, .setting-item select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* سوئیچ */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* خروجی گرفتن */
+        .export-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* یادآور */
+        .reminder-status {
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .reminder-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .reminder-inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* لیست لغات سخت */
+        .difficult-words {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .difficult-word-item {
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* انیمیشن‌ها */
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #fbbf24;
+            animation: confetti 2s ease-out;
+            pointer-events: none;
+        }
+
+        /* نوتیفیکیشن */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #22c55e;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateX(-50%) translateY(-100%); }
+            to { transform: translateX(-50%) translateY(0); }
+        }
+
+        /* دکمه شناور خانه - در همه صفحات به‌جز صفحه اصلی نمایش داده می‌شود */
+        .home-float-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .home-float-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .home-float-btn.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- دکمه شناور خانه: در همه صفحات به‌جز صفحه اصلی نمایش داده می‌شود -->
+    <button id="home-float-btn" class="home-float-btn hidden" onclick="showScreen('home-screen')" title="بازگشت به صفحه اصلی">🏠</button>
+
+    <div class="container">
+        <!-- صفحه اصلی -->
+        <div id="home-screen" class="screen active">
+            <h1>📚 آموزش لغات انگلیسی</h1>
+
+            <div class="points-display">
+                <div>امتیاز کل</div>
+                <div class="points-value" id="total-points">0</div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-words">0</div>
+                    <div class="stat-label">کل لغات</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-quizzes">0</div>
+                    <div class="stat-label">آزمون‌ها</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="avg-score">0%</div>
+                    <div class="stat-label">میانگین</div>
+                </div>
+            </div>
+
+            <h3 style="margin: 20px 0 10px; color: var(--text-primary);">🏅 نشان‌های شما</h3>
+            <div class="medals-container" id="medals-container"></div>
+
+            <button class="btn btn-primary" onclick="showScreen('srs-screen')">🧠 مرور روزانه (<span id="srs-due-count">0</span>)</button>
+            <button class="btn btn-primary" onclick="showScreen('quiz-screen')">🎯 شروع آزمون</button>
+            <button class="btn btn-primary" onclick="showScreen('words-screen')">📝 مدیریت لغات</button>
+            <button class="btn btn-primary" onclick="showScreen('difficult-words-screen')">📕 لغات سخت</button>
+            <button class="btn btn-primary" onclick="showScreen('export-screen')">📤 خروجی گرفتن</button>
+            <button class="btn btn-primary" onclick="showScreen('settings-screen')">⚙️ تنظیمات</button>
+
+            <div class="example-text">
+                💡 نکته: لغات را به فرمت "word = ترجمه" وارد کنید
+                <br>مثال: book = کتاب
+            </div>
+        </div>
+
+        <!-- صفحه مدیریت لغات -->
+        <div id="words-screen" class="screen">
+            <h1>📝 مدیریت لغات</h1>
+
+            <textarea id="words-input" placeholder="لغات خود را اینجا وارد کنید:
+book = کتاب
+teacher = معلم
+student = دانش‌آموز
+school = مدرسه
+..."></textarea>
+
+            <button class="btn btn-primary" onclick="saveWords()">💾 ذخیره لغات</button>
+            <button class="btn btn-primary" onclick="loadSampleWords()">📋 بارگذاری نمونه</button>
+
+            <div class="example-text">
+                تعداد لغات فعلی: <span id="current-words-count">0</span>
+            </div>
+        </div>
+
+        <!-- صفحه آزمون -->
+        <div id="quiz-screen" class="screen">
+            <h1>🎯 آزمون چهارگزینه‌ای</h1>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="question-number">1/10</div>
+                    <div class="stat-label">سوال</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="score-display">0</div>
+                    <div class="stat-label">امتیاز</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="points-display">0</div>
+                    <div class="stat-label">امتیاز کل</div>
+                </div>
+            </div>
+
+            <div class="question-box">
+                <div class="question-text" id="question-text">سوال</div>
+                <button class="pronunciation-btn" onclick="playPronunciation()">🔊</button>
+            </div>
+
+            <div id="options-container"></div>
+
+            <div id="feedback-container" class="feedback hidden"></div>
+
+            <button id="next-btn" class="btn btn-primary hidden" onclick="nextQuestion()">▶️ سوال بعدی</button>
+            <button id="finish-btn" class="btn btn-primary hidden" onclick="finishQuiz()">🏁 پایان آزمون</button>
+        </div>
+
+        <!-- صفحه نتایج -->
+        <div id="result-screen" class="screen">
+            <h1>🏆 نتایج آزمون</h1>
+
+            <div class="points-display">
+                <div>امتیاز کسب شده در این آزمون</div>
+                <div class="points-value" id="quiz-points">0</div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="final-score">0</div>
+                    <div class="stat-label">امتیاز</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="final-percent">0%</div>
+                    <div class="stat-label">درصد</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-questions">0</div>
+                    <div class="stat-label">تعداد سوال</div>
+                </div>
+            </div>
+
+            <div id="result-message" style="text-align: center; margin: 20px 0; font-size: 1.1rem; color: var(--text-primary);"></div>
+
+            <div id="new-medals" style="text-align: center; margin: 20px 0;"></div>
+
+            <button class="btn btn-primary" onclick="startQuiz()">🔄 آزمون مجدد</button>
+        </div>
+
+        <!-- صفحه مرور روزانه (SRS - شبیه آنکی) -->
+        <div id="srs-screen" class="screen">
+            <h1>🧠 مرور روزانه</h1>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="srs-progress-fill" style="width: 0%"></div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="srs-remaining">0</div>
+                    <div class="stat-label">باقی‌مانده</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="srs-done-today">0</div>
+                    <div class="stat-label">مرور شده</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="srs-due-total">0</div>
+                    <div class="stat-label">کل امروز</div>
+                </div>
+            </div>
+
+            <div class="question-box">
+                <div class="question-text" id="srs-word-text">کلمه</div>
+                <button class="pronunciation-btn" onclick="playSrsPronunciation()">🔊</button>
+                <div id="srs-answer-text" class="example-text hidden" style="font-size: 1.3rem; margin-top: 15px; text-align: center; color: var(--text-primary); font-weight: bold;"></div>
+            </div>
+
+            <button id="srs-show-btn" class="btn btn-primary" onclick="showSrsAnswer()">👁️ نمایش پاسخ</button>
+
+            <div id="srs-rating-buttons" class="hidden" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px;">
+                <button class="btn" style="background:#ef4444; color:white; font-size:0.85rem;" onclick="rateSrsWord(0)">دوباره<br><small id="srs-int-0"></small></button>
+                <button class="btn" style="background:#f59e0b; color:white; font-size:0.85rem;" onclick="rateSrsWord(1)">سخت<br><small id="srs-int-1"></small></button>
+                <button class="btn" style="background:#22c55e; color:white; font-size:0.85rem;" onclick="rateSrsWord(2)">خوب<br><small id="srs-int-2"></small></button>
+                <button class="btn" style="background:#667eea; color:white; font-size:0.85rem;" onclick="rateSrsWord(3)">آسان<br><small id="srs-int-3"></small></button>
+            </div>
+
+            <div id="srs-empty-message" class="hidden" style="text-align: center; margin: 30px 0; color: var(--text-secondary);">
+                🎉 امروز لغتی برای مرور نداری! فردا دوباره سر بزن.
+            </div>
+
+            <button class="btn btn-primary" onclick="showScreen('schedule-screen')" style="margin-top: 20px;">📅 برنامه مرور</button>
+        </div>
+
+        <!-- صفحه برنامه مرور -->
+        <div id="schedule-screen" class="screen">
+            <h1>📅 برنامه مرور</h1>
+
+            <p style="color: var(--text-secondary); margin: 15px 0; text-align: center;">
+                لغاتی که زودتر باید مرور شوند بالاتر نمایش داده می‌شوند. حداکثر فاصله مرور بین دو بار، یک ماه است.
+            </p>
+
+            <div class="difficult-words" id="schedule-list" style="max-height: 400px;"></div>
+        </div>
+
+        <!-- صفحه لغات سخت -->
+        <div id="difficult-words-screen" class="screen">
+            <h1>📕 لغات سخت</h1>
+
+            <p style="color: var(--text-secondary); margin: 15px 0;">
+                این لغاتی هستند که در آزمون‌ها اشتباه پاسخ داده‌اید. مرور آنها را فراموش نکنید!
+            </p>
+
+            <div class="difficult-words" id="difficult-words-list"></div>
+
+            <button class="btn btn-primary" onclick="reviewDifficultWords()">🔄 مرور لغات سخت</button>
+            <button class="btn btn-primary" onclick="clearDifficultWords()">🗑️ پاک کردن لیست</button>
+        </div>
+
+        <!-- صفحه خروجی گرفتن -->
+        <div id="export-screen" class="screen">
+            <h1>📤 خروجی گرفتن</h1>
+
+            <div class="setting-item">
+                <label>فرمت خروجی:</label>
+                <div class="export-options">
+                    <button class="btn btn-primary" onclick="exportToTXT()">📄 TXT</button>
+                    <button class="btn btn-primary" onclick="exportToJSON()">📋 JSON</button>
+                    <button class="btn btn-primary" onclick="exportToCSV()">📊 CSV</button>
+                    <button class="btn btn-primary" onclick="exportToHTML()">🌐 HTML</button>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="importWords()">📥 وارد کردن لغات</button>
+            <input type="file" id="import-file" style="display: none;" onchange="handleImport(event)" accept=".txt,.json,.csv">
+        </div>
+
+        <!-- صفحه تنظیمات -->
+        <div id="settings-screen" class="screen">
+            <h1>⚙️ تنظیمات</h1>
+
+            <div class="setting-item">
+                <div class="toggle-container">
+                    <label>حالت شب 🌙</label>
+                    <label class="switch">
+                        <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="toggle-container">
+                    <label>🔊 تلفظ صوتی</label>
+                    <label class="switch">
+                        <input type="checkbox" id="pronunciation-toggle" checked onchange="togglePronunciation()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="toggle-container">
+                    <label>یادآور روزانه ⏰</label>
+                    <label class="switch">
+                        <input type="checkbox" id="reminder-toggle" onchange="toggleReminder()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div id="reminder-time-container" class="hidden" style="margin-top: 10px;">
+                    <label>ساعت یادآور:</label>
+                    <input type="time" id="reminder-time" onchange="saveReminderTime()">
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <label>تعداد سوالات هر آزمون:</label>
+                <input type="number" id="quiz-size" value="10" min="5" max="50">
+            </div>
+
+            <div class="setting-item">
+                <label>سطح دشواری:</label>
+                <select id="difficulty-level">
+                    <option value="easy">آسان</option>
+                    <option value="medium" selected>متوسط</option>
+                    <option value="hard">سخت</option>
+                </select>
+            </div>
+
+            <div class="reminder-status" id="reminder-status">
+                وضعیت یادآور: غیرفعال
+            </div>
+
+            <button class="btn btn-primary" onclick="saveSettings()">💾 ذخیره تنظیمات</button>
+            <button class="btn btn-primary" onclick="clearAllData()">🗑️ پاک کردن همه داده‌ها</button>
+        </div>
+    </div>
+
+    <script>
+        // داده‌های برنامه
+        let words = [];
+        let difficultWords = [];
+        let quizQuestions = [];
+        let currentQuestion = 0;
+        let score = 0;
+        let quizPoints = 0;
+        let totalPoints = 0;
+        let quizSize = 10;
+        let totalQuizzes = 0;
+        let totalScore = 0;
+        let darkMode = false;
+        let pronunciationEnabled = true;
+        let reminderEnabled = false;
+        let reminderTime = '09:00';
+
+        // وضعیت مرور لغات سخت (جایگزین روش قبلی override کردن تابع)
+        let reviewingDifficult = false;
+        let wordsBeforeReview = [];
+
+        // داده‌های سیستم مرور فاصله‌دار (SRS) - شبیه آنکی
+        // برای هر لغت: { interval (روز), easeFactor, repetitions, dueDate (YYYY-MM-DD), lastReviewed }
+        let srsData = {};
+        let srsQueue = [];
+        let srsCurrentIndex = 0;
+        let srsDoneToday = 0;
+        let srsCurrentWord = null;
+        const MAX_SRS_INTERVAL = 30; // طبق درخواست کاربر: حداکثر فاصله مرور یک ماه است
+
+        let medals = {
+            firstQuiz: false,
+            tenQuizzes: false,
+            perfectScore: false,
+            hundredWords: false,
+            weekStreak: false,
+            monthStreak: false,
+            thousandPoints: false,
+            master: false
+        };
+
+        // نشان‌ها
+        const medalsData = [
+            { id: 'firstQuiz', icon: '🥉', name: 'اولین آزمون' },
+            { id: 'tenQuizzes', icon: '🥈', name: '۱۰ آزمون' },
+            { id: 'perfectScore', icon: '🏆', name: 'نمره کامل' },
+            { id: 'hundredWords', icon: '📚', name: '۱۰۰ لغت' },
+            { id: 'weekStreak', icon: '🔥', name: 'هفته‌ای' },
+            { id: 'monthStreak', icon: '⭐', name: 'ماهانه' },
+            { id: 'thousandPoints', icon: '💎', name: '۱۰۰۰ امتیاز' },
+            { id: 'master', icon: '👑', name: 'استاد' }
+        ];
+
+        // بارگذاری اولیه
+        window.onload = function() {
+            loadWords();
+            loadSettings();
+            loadMedals();
+            loadSrsData();
+            syncSrsWithWords();
+            updateStats();
+            renderMedals();
+            checkReminder();
+            // بررسی دوره‌ای یادآور (هر ۳۰ ثانیه) - قبلاً فقط یک‌بار موقع بارگذاری اجرا می‌شد
+            setInterval(checkReminder, 30000);
+        };
+
+        // نمایش صفحه
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+
+            // دکمه شناور خانه فقط در صفحاتی غیر از خانه نمایش داده می‌شود
+            const homeBtn = document.getElementById('home-float-btn');
+            if(screenId === 'home-screen') {
+                homeBtn.classList.add('hidden');
+            } else {
+                homeBtn.classList.remove('hidden');
+            }
+
+            if(screenId === 'quiz-screen' && words.length < 4) {
+                showNotification('⚠️ حداقل ۴ لغت نیاز است! لطفاً ابتدا لغات اضافه کنید.', 'error');
+                showScreen('words-screen');
+                return;
+            }
+
+            if(screenId === 'quiz-screen') {
+                startQuiz();
+            }
+
+            if(screenId === 'difficult-words-screen') {
+                renderDifficultWords();
+            }
+
+            if(screenId === 'srs-screen') {
+                startSrsReview();
+            }
+
+            if(screenId === 'schedule-screen') {
+                renderSchedule();
+            }
+        }
+
+        // نمایش نوتیفیکیشن
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.background = type === 'success' ? '#22c55e' : '#ef4444';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // ذخیره لغات
+        function saveWords() {
+            const input = document.getElementById('words-input').value;
+            words = [];
+
+            input.split('\n').forEach(line => {
+                const parts = line.split('=');
+                if(parts.length >= 2) {
+                    words.push({
+                        english: parts[0].trim(),
+                        persian: parts[1].trim()
+                    });
+                }
+            });
+
+            localStorage.setItem('vocabWords', JSON.stringify(words));
+            syncSrsWithWords();
+            updateStats();
+            renderMedals();
+            showNotification('✅ لغات ذخیره شد! (' + words.length + ' لغت)');
+        }
+
+        // بارگذاری لغات
+        function loadWords() {
+            const saved = localStorage.getItem('vocabWords');
+            if(saved) {
+                words = JSON.parse(saved);
+                document.getElementById('words-input').value =
+                    words.map(w => w.english + ' = ' + w.persian).join('\n');
+            }
+        }
+
+        // بارگذاری نمونه لغات
+        function loadSampleWords() {
+            // نکته: قبلاً بین "جدید" و "old" خط جدید جا افتاده بود و این دو رکورد
+            // را به یک رشته نامعتبر "new = جدیدold = قدیمی" می‌چسباند.
+            const sample = `book = کتاب
+teacher = معلم
+student = دانش‌آموز
+school = مدرسه
+apple = سیب
+water = آب
+friend = دوست
+family = خانواده
+house = خانه
+car = ماشین
+dog = سگ
+cat = گربه
+tree = درخت
+flower = گل
+sun = خورشید
+moon = ماه
+star = ستاره
+bird = پرنده
+fish = ماهی
+happy = خوشحال
+sad = غمگین
+big = بزرگ
+small = کوچک
+fast = سریع
+slow = آهسته
+good = خوب
+bad = بد
+hot = گرم
+cold = سرد
+new = جدید
+old = قدیمی`;
+
+            document.getElementById('words-input').value = sample;
+            saveWords();
+        }
+
+        // شروع آزمون
+        function startQuiz() {
+            if(words.length < 4) {
+                showNotification('⚠️ حداقل ۴ لغت نیاز است!', 'error');
+                showScreen('words-screen');
+                return;
+            }
+
+            currentQuestion = 0;
+            score = 0;
+            quizPoints = 0;
+            quizQuestions = generateQuestions();
+            showQuestion();
+        }
+
+        // تولید سوالات
+        function generateQuestions() {
+            const questions = [];
+            const shuffled = [...words].sort(() => Math.random() - 0.5);
+            const selected = shuffled.slice(0, Math.min(quizSize, words.length));
+
+            selected.forEach(word => {
+                const wrongOptions = words
+                    .filter(w => w.english !== word.english)
+                    .sort(() => Math.random() - 0.5)
+                    .slice(0, 3)
+                    .map(w => w.persian);
+
+                const options = [...wrongOptions, word.persian].sort(() => Math.random() - 0.5);
+
+                questions.push({
+                    word: word,
+                    options: options,
+                    correct: word.persian
+                });
+            });
+
+            return questions;
+        }
+
+        // نمایش سوال
+        function showQuestion() {
+            if(currentQuestion >= quizQuestions.length) {
+                finishQuiz();
+                return;
+            }
+
+            const q = quizQuestions[currentQuestion];
+            document.getElementById('question-text').textContent =
+                'معنی کلمه "' + q.word.english + '" چیست؟';
+
+            document.getElementById('question-number').textContent =
+                (currentQuestion + 1) + '/' + quizQuestions.length;
+
+            document.getElementById('score-display').textContent = score;
+            document.getElementById('points-display').textContent = totalPoints;
+
+            const progress = ((currentQuestion) / quizQuestions.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-option';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(btn, option, q.correct);
+                container.appendChild(btn);
+            });
+
+            document.getElementById('feedback-container').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('finish-btn').classList.add('hidden');
+        }
+
+        // تلفظ صوتی
+        function playPronunciation() {
+            if(!pronunciationEnabled) return;
+
+            const word = quizQuestions[currentQuestion].word.english;
+
+            if('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            } else {
+                showNotification('🔊 مرورگر شما از تلفظ صوتی پشتیبانی نمی‌کند', 'error');
+            }
+        }
+
+        // بررسی پاسخ
+        function checkAnswer(btn, selected, correct) {
+            const buttons = document.querySelectorAll('.btn-option');
+            buttons.forEach(b => b.disabled = true);
+
+            const feedback = document.getElementById('feedback-container');
+            feedback.classList.remove('hidden', 'correct', 'wrong');
+
+            if(selected === correct) {
+                btn.classList.add('correct');
+                feedback.classList.add('correct');
+                feedback.textContent = '✅ آفرین! پاسخ صحیح است (+10 امتیاز)';
+                score++;
+                quizPoints += 10;
+            } else {
+                btn.classList.add('wrong');
+                buttons.forEach(b => {
+                    if(b.textContent === correct) b.classList.add('correct');
+                });
+                feedback.classList.add('wrong');
+                feedback.textContent = '❌ اشتباه بود! پاسخ صحیح: ' + correct;
+
+                // اضافه کردن به لغات سخت
+                const currentWord = quizQuestions[currentQuestion].word;
+                if(!difficultWords.some(w => w.english === currentWord.english)) {
+                    difficultWords.push(currentWord);
+                    localStorage.setItem('difficultWords', JSON.stringify(difficultWords));
+                }
+            }
+
+            document.getElementById('score-display').textContent = score;
+            document.getElementById('points-display').textContent = totalPoints + quizPoints;
+
+            if(currentQuestion < quizQuestions.length - 1) {
+                document.getElementById('next-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('finish-btn').classList.remove('hidden');
+            }
+        }
+
+        // سوال بعدی
+        function nextQuestion() {
+            currentQuestion++;
+            showQuestion();
+        }
+
+        // پایان آزمون
+        function finishQuiz() {
+            const percent = Math.round((score / quizQuestions.length) * 100);
+            totalPoints += quizPoints;
+
+            document.getElementById('quiz-points').textContent = quizPoints;
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('final-percent').textContent = percent + '%';
+            document.getElementById('total-questions').textContent = quizQuestions.length;
+
+            let message = '';
+            if(percent >= 90) {
+                message = '🌟 عالی! فوق‌العاده بود! (+50 امتیاز پاداش)';
+                totalPoints += 50;
+                checkMedal('perfectScore');
+            } else if(percent >= 70) {
+                message = '👏 خوب بود! ادامه بده! (+20 امتیاز پاداش)';
+                totalPoints += 20;
+            } else if(percent >= 50) {
+                message = '⚠️ قابل قبول، ولی بیشتر تمرین کن (+10 امتیاز پاداش)';
+                totalPoints += 10;
+            } else {
+                message = '💪 نیاز به تلاش بیشتر داری!';
+            }
+
+            document.getElementById('result-message').textContent = message;
+
+            totalQuizzes++;
+            totalScore += percent;
+
+            // بررسی نشان‌ها
+            checkMedals();
+
+            localStorage.setItem('totalQuizzes', totalQuizzes);
+            localStorage.setItem('totalScore', totalScore);
+            localStorage.setItem('totalPoints', totalPoints);
+            localStorage.setItem('medals', JSON.stringify(medals));
+
+            // نمایش نشان‌های جدید
+            renderNewMedals();
+
+            // افکت کاغذ رنگی برای نمرات بالا
+            if(percent >= 80) {
+                createConfetti();
+            }
+
+            showScreen('result-screen');
+
+            // اگر این آزمون مرور «لغات سخت» بود، لیست اصلی لغات را برگردان
+            // (جایگزین روش قبلی که تابع finishQuiz را بازنویسی می‌کرد و در مرورهای
+            // پشت‌سرهم لیست را به‌درستی بازیابی نمی‌کرد)
+            if(reviewingDifficult) {
+                words = wordsBeforeReview;
+                reviewingDifficult = false;
+            }
+        }
+
+        // بررسی نشان‌ها
+        function checkMedals() {
+            if(totalQuizzes >= 1) checkMedal('firstQuiz');
+            if(totalQuizzes >= 10) checkMedal('tenQuizzes');
+            if(words.length >= 100) checkMedal('hundredWords');
+            if(totalPoints >= 1000) checkMedal('thousandPoints');
+            if(totalQuizzes >= 30) checkMedal('monthStreak');
+            if(totalQuizzes >= 7) checkMedal('weekStreak');
+            if(totalQuizzes >= 50 && totalPoints >= 5000) checkMedal('master');
+        }
+
+        function checkMedal(medalId) {
+            if(!medals[medalId]) {
+                medals[medalId] = true;
+                return true;
+            }
+            return false;
+        }
+
+        // نمایش نشان‌ها
+        function renderMedals() {
+            const container = document.getElementById('medals-container');
+            container.innerHTML = '';
+
+            medalsData.forEach(medal => {
+                const div = document.createElement('div');
+                div.className = 'medal' + (medals[medal.id] ? ' unlocked' : '');
+                div.innerHTML = `
+                    <div class="medal-icon">${medal.icon}</div>
+                    <div class="medal-name">${medal.name}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderNewMedals() {
+            const container = document.getElementById('new-medals');
+            container.innerHTML = '';
+
+            // نمایش نشان‌های جدید کسب شده
+            const newMedals = medalsData.filter(m => medals[m.id]);
+            if(newMedals.length > 0) {
+                container.innerHTML = '<h3>🏆 نشان‌های کسب شده:</h3>';
+                newMedals.forEach(medal => {
+                    const div = document.createElement('div');
+                    div.style.fontSize = '2rem';
+                    div.style.margin = '10px';
+                    div.textContent = medal.icon + ' ' + medal.name;
+                    container.appendChild(div);
+                });
+            }
+        }
+
+        // افکت کاغذ رنگی
+        function createConfetti() {
+            const colors = ['#fbbf24', '#ef4444', '#22c55e', '#667eea', '#f59e0b'];
+
+            for(let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 2000);
+            }
+        }
+
+        // ذخیره تنظیمات
+        function saveSettings() {
+            quizSize = parseInt(document.getElementById('quiz-size').value);
+            const difficulty = document.getElementById('difficulty-level').value;
+
+            localStorage.setItem('quizSize', quizSize);
+            localStorage.setItem('difficulty', difficulty);
+            localStorage.setItem('darkMode', darkMode);
+            localStorage.setItem('pronunciationEnabled', pronunciationEnabled);
+            localStorage.setItem('reminderEnabled', reminderEnabled);
+            localStorage.setItem('reminderTime', reminderTime);
+
+            showNotification('✅ تنظیمات ذخیره شد');
+        }
+
+        // بارگذاری تنظیمات
+        function loadSettings() {
+            const saved = localStorage.getItem('quizSize');
+            if(saved) {
+                quizSize = parseInt(saved);
+                document.getElementById('quiz-size').value = quizSize;
+            }
+
+            totalQuizzes = parseInt(localStorage.getItem('totalQuizzes')) || 0;
+            totalScore = parseInt(localStorage.getItem('totalScore')) || 0;
+            totalPoints = parseInt(localStorage.getItem('totalPoints')) || 0;
+
+            darkMode = localStorage.getItem('darkMode') === 'true';
+            pronunciationEnabled = localStorage.getItem('pronunciationEnabled') !== 'false';
+            reminderEnabled = localStorage.getItem('reminderEnabled') === 'true';
+            reminderTime = localStorage.getItem('reminderTime') || '09:00';
+
+            const difficulty = localStorage.getItem('difficulty');
+            if(difficulty) {
+                document.getElementById('difficulty-level').value = difficulty;
+            }
+
+            if(darkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('dark-mode-toggle').checked = true;
+            }
+
+            document.getElementById('pronunciation-toggle').checked = pronunciationEnabled;
+            document.getElementById('reminder-toggle').checked = reminderEnabled;
+            document.getElementById('reminder-time').value = reminderTime;
+
+            if(reminderEnabled) {
+                document.getElementById('reminder-time-container').classList.remove('hidden');
+                document.getElementById('reminder-status').textContent = 'وضعیت یادآور: فعال (ساعت ' + reminderTime + ')';
+                document.getElementById('reminder-status').className = 'reminder-status reminder-active';
+            }
+        }
+
+        // بارگذاری نشان‌ها
+        function loadMedals() {
+            const saved = localStorage.getItem('medals');
+            if(saved) {
+                medals = JSON.parse(saved);
+            }
+        }
+
+        // حالت شب
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode');
+            saveSettings();
+        }
+
+        // روشن/خاموش کردن تلفظ صوتی (قبلاً اصلاً به این تابع وصل نبود)
+        function togglePronunciation() {
+            pronunciationEnabled = document.getElementById('pronunciation-toggle').checked;
+            saveSettings();
+        }
+
+        // یادآور
+        function toggleReminder() {
+            reminderEnabled = !reminderEnabled;
+
+            if(reminderEnabled) {
+                document.getElementById('reminder-time-container').classList.remove('hidden');
+                document.getElementById('reminder-status').textContent = 'وضعیت یادآور: فعال (ساعت ' + reminderTime + ')';
+                document.getElementById('reminder-status').className = 'reminder-status reminder-active';
+            } else {
+                document.getElementById('reminder-time-container').classList.add('hidden');
+                document.getElementById('reminder-status').textContent = 'وضعیت یادآور: غیرفعال';
+                document.getElementById('reminder-status').className = 'reminder-status reminder-inactive';
+            }
+
+            saveSettings();
+        }
+
+        function saveReminderTime() {
+            reminderTime = document.getElementById('reminder-time').value;
+            saveSettings();
+        }
+
+        function checkReminder() {
+            if(!reminderEnabled) return;
+
+            const now = new Date();
+            const currentTime = now.getHours().toString().padStart(2, '0') + ':' +
+                               now.getMinutes().toString().padStart(2, '0');
+
+            if(currentTime === reminderTime) {
+                showNotification('⏰ وقت مطالعه لغات است!');
+
+                if('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('یادآور مطالعه', {
+                        body: 'وقت مطالعه لغات انگلیسی است!'
+                    });
+                }
+            }
+        }
+
+        // لغات سخت
+        function renderDifficultWords() {
+            const container = document.getElementById('difficult-words-list');
+            container.innerHTML = '';
+
+            if(difficultWords.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">تبریک! هیچ لغت سختی ندارید! 🎉</p>';
+                return;
+            }
+
+            difficultWords.forEach(word => {
+                const div = document.createElement('div');
+                div.className = 'difficult-word-item';
+                div.innerHTML = `
+                    <span>${word.english}</span>
+                    <span>${word.persian}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function reviewDifficultWords() {
+            if(difficultWords.length === 0) {
+                showNotification('هیچ لغت سختی برای مرور وجود ندارد!', 'error');
+                return;
+            }
+
+            // لیست فعلی را نگه می‌داریم تا بعد از پایان آزمون مرور برگردانیم
+            wordsBeforeReview = [...words];
+            words = [...difficultWords];
+            reviewingDifficult = true;
+            showScreen('quiz-screen');
+        }
+
+        function clearDifficultWords() {
+            if(confirm('آیا مطمئن هستید؟ همه لغات سخت پاک می‌شوند!')) {
+                difficultWords = [];
+                localStorage.removeItem('difficultWords');
+                renderDifficultWords();
+                showNotification('✅ لغات سخت پاک شد');
+            }
+        }
+
+        // ===================== سیستم مرور فاصله‌دار (SRS) =====================
+        // الگوریتم بر پایه SM-2 (همان روشی که آنکی استفاده می‌کند) با یک تفاوت
+        // عمدی: طبق درخواست، فاصله مرور هیچ‌وقت از ۳۰ روز (یک ماه) بیشتر نمی‌شود.
+
+        function todayISO() {
+            const d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+
+        function addDaysISO(days) {
+            const d = new Date();
+            d.setDate(d.getDate() + days);
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+
+        // کلید شناسایی هر لغت در srsData (کلمه انگلیسی، بدون حساسیت به حروف بزرگ/کوچک)
+        function srsKey(word) {
+            return word.english.trim().toLowerCase();
+        }
+
+        function loadSrsData() {
+            const saved = localStorage.getItem('srsData');
+            srsData = saved ? JSON.parse(saved) : {};
+        }
+
+        function saveSrsData() {
+            localStorage.setItem('srsData', JSON.stringify(srsData));
+        }
+
+        // هر بار که لیست لغات تغییر می‌کند: به لغات جدید رکورد SRS اضافه کن
+        // (آماده برای مرور همین امروز) و رکورد لغات حذف‌شده را پاک کن.
+        // لغات موجود دست‌نخورده باقی می‌مانند تا تاریخچه مرورشان از بین نرود.
+        function syncSrsWithWords() {
+            const currentKeys = new Set(words.map(srsKey));
+
+            words.forEach(w => {
+                const key = srsKey(w);
+                if(!srsData[key]) {
+                    srsData[key] = {
+                        interval: 0,
+                        easeFactor: 2.5,
+                        repetitions: 0,
+                        dueDate: todayISO(),
+                        lastReviewed: null
+                    };
+                }
+            });
+
+            Object.keys(srsData).forEach(key => {
+                if(!currentKeys.has(key)) delete srsData[key];
+            });
+
+            saveSrsData();
+        }
+
+        function getDueWords() {
+            const today = todayISO();
+            return words.filter(w => {
+                const entry = srsData[srsKey(w)];
+                return entry && entry.dueDate <= today;
+            });
+        }
+
+        function updateSrsDueCount() {
+            const el = document.getElementById('srs-due-count');
+            if(el) el.textContent = getDueWords().length;
+        }
+
+        // محاسبه فاصله بعدی بر اساس کیفیت پاسخ:
+        // 0=دوباره (فراموش کردم)، 1=سخت، 2=خوب، 3=آسان
+        function applyRating(entry, quality) {
+            if(quality === 0) {
+                entry.repetitions = 0;
+                entry.interval = 1;
+                entry.easeFactor = Math.max(1.3, entry.easeFactor - 0.2);
+            } else {
+                entry.repetitions++;
+                if(entry.repetitions === 1) {
+                    entry.interval = 1;
+                } else if(entry.repetitions === 2) {
+                    entry.interval = 3;
+                } else {
+                    entry.interval = Math.round(entry.interval * entry.easeFactor);
+                }
+
+                if(quality === 1) {
+                    entry.easeFactor = Math.max(1.3, entry.easeFactor - 0.15);
+                    entry.interval = Math.max(1, Math.round(entry.interval * 0.8));
+                } else if(quality === 3) {
+                    entry.easeFactor = entry.easeFactor + 0.15;
+                    entry.interval = Math.round(entry.interval * 1.3);
+                }
+            }
+
+            // سقف یک‌ماهه طبق درخواست کاربر
+            entry.interval = Math.max(1, Math.min(entry.interval, MAX_SRS_INTERVAL));
+        }
+
+        // پیش‌نمایش فاصله بعدی برای هر گزینه، بدون تغییر دادن state واقعی
+        // (دقیقاً همان چیزی که آنکی زیر دکمه‌های دوباره/سخت/خوب/آسان نشان می‌دهد)
+        function previewIntervals(entry) {
+            return [0, 1, 2, 3].map(q => {
+                const clone = Object.assign({}, entry);
+                applyRating(clone, q);
+                return clone.interval;
+            });
+        }
+
+        function startSrsReview() {
+            srsQueue = getDueWords();
+            srsCurrentIndex = 0;
+            srsDoneToday = 0;
+            document.getElementById('srs-due-total').textContent = srsQueue.length;
+            document.getElementById('srs-done-today').textContent = 0;
+            showSrsWord();
+        }
+
+        function showSrsWord() {
+            document.getElementById('srs-remaining').textContent = srsQueue.length - srsCurrentIndex;
+
+            if(srsCurrentIndex >= srsQueue.length) {
+                document.getElementById('srs-word-text').textContent = '';
+                document.getElementById('srs-answer-text').classList.add('hidden');
+                document.getElementById('srs-show-btn').classList.add('hidden');
+                document.getElementById('srs-rating-buttons').classList.add('hidden');
+                document.getElementById('srs-empty-message').classList.remove('hidden');
+                document.getElementById('srs-progress-fill').style.width = '100%';
+                return;
+            }
+
+            document.getElementById('srs-empty-message').classList.add('hidden');
+            document.getElementById('srs-show-btn').classList.remove('hidden');
+            document.getElementById('srs-rating-buttons').classList.add('hidden');
+
+            srsCurrentWord = srsQueue[srsCurrentIndex];
+            document.getElementById('srs-word-text').textContent = srsCurrentWord.english;
+
+            const answerEl = document.getElementById('srs-answer-text');
+            answerEl.textContent = srsCurrentWord.persian;
+            answerEl.classList.add('hidden');
+
+            const progress = (srsCurrentIndex / srsQueue.length) * 100;
+            document.getElementById('srs-progress-fill').style.width = progress + '%';
+
+            const entry = srsData[srsKey(srsCurrentWord)];
+            const previews = previewIntervals(entry);
+            document.getElementById('srs-int-0').textContent = 'به‌زودی (همین جلسه)';
+            document.getElementById('srs-int-1').textContent = previews[1] + ' روز';
+            document.getElementById('srs-int-2').textContent = previews[2] + ' روز';
+            document.getElementById('srs-int-3').textContent = previews[3] + ' روز';
+        }
+
+        function showSrsAnswer() {
+            document.getElementById('srs-answer-text').classList.remove('hidden');
+            document.getElementById('srs-show-btn').classList.add('hidden');
+            document.getElementById('srs-rating-buttons').classList.remove('hidden');
+        }
+
+        function playSrsPronunciation() {
+            if(!pronunciationEnabled || !srsCurrentWord) return;
+            if('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(srsCurrentWord.english);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function rateSrsWord(quality) {
+            const key = srsKey(srsCurrentWord);
+            const entry = srsData[key];
+            const reviewedWord = srsCurrentWord;
+
+            applyRating(entry, quality);
+            entry.lastReviewed = todayISO();
+
+            if(quality === 0) {
+                // «دوباره»: کلمه را برای فردا برنامه‌ریزی نکن، همین امروز due بماند
+                // و چند کارت دیگر در همین صف دوباره نشانش بده تا فوراً تمرین شود
+                entry.dueDate = todayISO();
+                saveSrsData();
+
+                const STEP = 3; // چند کارت دیگر فاصله بینداز قبل از تکرار
+                const insertPos = Math.min(srsCurrentIndex + 1 + STEP, srsQueue.length);
+                srsQueue.splice(insertPos, 0, reviewedWord);
+
+                document.getElementById('srs-due-total').textContent = srsQueue.length;
+            } else {
+                // پاسخ درست: حالا فاصله واقعی روزانه طبق SM-2 اعمال می‌شود
+                entry.dueDate = addDaysISO(entry.interval);
+                saveSrsData();
+            }
+
+            srsDoneToday++;
+            document.getElementById('srs-done-today').textContent = srsDoneToday;
+
+            srsCurrentIndex++;
+            showSrsWord();
+            updateSrsDueCount();
+        }
+
+        // صفحه برنامه مرور: همه لغات به ترتیب نزدیک‌ترین تاریخ مرور
+        function renderSchedule() {
+            const container = document.getElementById('schedule-list');
+            container.innerHTML = '';
+
+            if(words.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">هنوز لغتی اضافه نکرده‌اید.</p>';
+                return;
+            }
+
+            const today = todayISO();
+            const rows = words.map(w => {
+                const entry = srsData[srsKey(w)] || { dueDate: today, interval: 0, repetitions: 0 };
+                return { word: w, entry };
+            }).sort((a, b) => a.entry.dueDate.localeCompare(b.entry.dueDate));
+
+            rows.forEach(row => {
+                const isDue = row.entry.dueDate <= today;
+                const statusText = isDue ? 'امروز' : row.entry.dueDate;
+                const div = document.createElement('div');
+                div.className = 'difficult-word-item';
+                div.innerHTML = `
+                    <span>${row.word.english} = ${row.word.persian}</span>
+                    <span style="color:${isDue ? '#22c55e' : 'var(--text-secondary)'}; font-weight:${isDue ? 'bold' : 'normal'};">${statusText}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+        // ===================== پایان سیستم مرور فاصله‌دار =====================
+
+        // خروجی گرفتن
+        function exportToTXT() {
+            const content = words.map(w => w.english + ' = ' + w.persian).join('\n');
+            downloadFile(content, 'vocab.txt', 'text/plain');
+        }
+
+        function exportToJSON() {
+            const content = JSON.stringify(words, null, 2);
+            downloadFile(content, 'vocab.json', 'application/json');
+        }
+
+        function exportToCSV() {
+            const content = 'English,Persian\n' + words.map(w => w.english + ',' + w.persian).join('\n');
+            downloadFile(content, 'vocab.csv', 'text/csv');
+        }
+
+        function exportToHTML() {
+            const content = `
+<!DOCTYPE html>
+<html dir="rtl">
+<head><meta charset="UTF-8"><title>لغات انگلیسی</title></head>
+<body>
+<h1>لیست لغات انگلیسی</h1>
+<table border="1" style="border-collapse: collapse; width: 100%;">
+<tr><th>انگلیسی</th><th>فارسی</th></tr>
+${words.map(w => '<tr><td>' + w.english + '</td><td>' + w.persian + '</td></tr>').join('')}
+</table>
+</body>
+</html>`;
+            downloadFile(content, 'vocab.html', 'text/html');
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('✅ فایل دانلود شد');
+        }
+
+        // وارد کردن لغات
+        function importWords() {
+            document.getElementById('import-file').click();
+        }
+
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+
+                if(file.name.endsWith('.json')) {
+                    words = JSON.parse(content);
+                } else if(file.name.endsWith('.csv')) {
+                    words = content.split('\n').slice(1).map(line => {
+                        const parts = line.split(',');
+                        return { english: parts[0], persian: parts[1] };
+                    }).filter(w => w.english && w.persian);
+                } else {
+                    words = content.split('\n').map(line => {
+                        const parts = line.split('=');
+                        if(parts.length >= 2) {
+                            return { english: parts[0].trim(), persian: parts[1].trim() };
+                        }
+                    }).filter(w => w);
+                }
+
+                saveWords();
+                showNotification('✅ لغات وارد شد (' + words.length + ' لغت)');
+            };
+            reader.readAsText(file);
+        }
+
+        // پاک کردن همه داده‌ها
+        function clearAllData() {
+            if(confirm('⚠️ آیا مطمئن هستید؟ همه لغات، آمار و نشان‌ها پاک می‌شوند!')) {
+                localStorage.clear();
+                words = [];
+                difficultWords = [];
+                srsData = {};
+                totalQuizzes = 0;
+                totalScore = 0;
+                totalPoints = 0;
+                medals = {
+                    firstQuiz: false, tenQuizzes: false, perfectScore: false,
+                    hundredWords: false, weekStreak: false, monthStreak: false,
+                    thousandPoints: false, master: false
+                };
+
+                // قبلاً حالت شب بعد از پاک کردن داده‌ها روشن می‌ماند؛ این‌جا واقعاً ریست می‌شود
+                darkMode = false;
+                document.body.classList.remove('dark-mode');
+                document.getElementById('dark-mode-toggle').checked = false;
+
+                pronunciationEnabled = true;
+                document.getElementById('pronunciation-toggle').checked = true;
+
+                reminderEnabled = false;
+                document.getElementById('reminder-toggle').checked = false;
+                document.getElementById('reminder-time-container').classList.add('hidden');
+                document.getElementById('reminder-status').textContent = 'وضعیت یادآور: غیرفعال';
+                document.getElementById('reminder-status').className = 'reminder-status reminder-inactive';
+
+                document.getElementById('words-input').value = '';
+                updateStats();
+                renderMedals();
+                showNotification('✅ همه داده‌ها پاک شد');
+            }
+        }
+
+        // بروزرسانی آمار
+        function updateStats() {
+            document.getElementById('total-words').textContent = words.length;
+            document.getElementById('current-words-count').textContent = words.length;
+            document.getElementById('total-quizzes').textContent = totalQuizzes;
+            document.getElementById('total-points').textContent = totalPoints;
+
+            const avg = totalQuizzes > 0 ? Math.round(totalScore / totalQuizzes) : 0;
+            document.getElementById('avg-score').textContent = avg + '%';
+
+            updateSrsDueCount();
+        }
+
+        // درخواست مجوز نوتیفیکیشن
+        if('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // ثبت Service Worker برای کارکرد آفلاین و نصب‌شدن به‌عنوان وب‌اپ
+        // نکته مهم: این فقط وقتی کار می‌کند که فایل از طریق http:// یا https:// باز شود،
+        // نه با دابل‌کلیک مستقیم روی فایل (file://) - مرورگرها SW را در آن حالت مسدود می‌کنند.
+        if('serviceWorker' in navigator && (location.protocol === 'http:' || location.protocol === 'https:')) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(() => console.log('Service Worker با موفقیت ثبت شد'))
+                    .catch((err) => console.warn('ثبت Service Worker ناموفق بود:', err));
+            });
+        }
+    </script>
+</body>
+</html>
