@@ -4,7 +4,7 @@
   "description": "برنامه آموزش و مرور فاصله‌دار لغات انگلیسی با آزمون چهارگزینه‌ای و سیستم مرور هوشمند",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "./decotype.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
